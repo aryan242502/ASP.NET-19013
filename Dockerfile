@@ -2,12 +2,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
+# Copy solution
 COPY *.sln ./
-COPY DoctorAppointment/*.csproj DoctorAppointment/
 
+# Copy project folder
+COPY DoctorAppointmentSystem/*.csproj DoctorAppointmentSystem/
+
+# Restore
 RUN dotnet restore
 
+# Copy everything
 COPY . .
+
+# Publish
 RUN dotnet publish -c Release -o /app
 
 # Stage 2: Runtime
