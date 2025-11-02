@@ -1,0 +1,154 @@
+﻿@model IEnumerable<DoctorAppointmentSystem.Models.Appointment>
+
+@{
+    ViewData["Title"] = "Manage Appointments";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body {
+        background: #eef3f7;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .dashboard-container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-top: 50px;
+    }
+
+    h2 {
+        font-weight: 600;
+        color: #007bff;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th {
+        background-color: #007bff !important;
+        color: white !important;
+        text-align: center;
+    }
+
+    td {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+        border-radius: 10px;
+    }
+
+    .btn {
+        border-radius: 8px;
+        font-size: 0.85rem;
+        padding: 6px 10px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f2f9ff;
+        transition: 0.3s;
+    }
+
+    .status-pending {
+        background-color: #ffc107;
+        color: black;
+    }
+
+    .status-accepted {
+        background-color: #28a745;
+    }
+
+    .status-rejected {
+        background-color: #dc3545;
+    }
+</style>
+
+<div class="container dashboard-container">
+    <h2>📅 Manage Doctor Appointments</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-info text-center">@TempData["Message"]</div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Doctor Name</th>
+                    <th>Patient Name</th>
+                    <th>Patient Email</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th style="width: 200px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.DoctorName</td>
+                            <td>@item.PatientName</td>
+                            <td>@item.PatientEmail</td>
+                            <td>@item.AppointmentDate.ToString("yyyy-MM-dd")</td>
+                            <td>@item.TimeSlot</td>
+                            <td>
+                                @if (item.Status == "Pending")
+                                {
+                                    <span class="badge status-pending">Pending</span>
+                                }
+                                else if (item.Status == "Accepted")
+                                {
+                                    <span class="badge status-accepted">Accepted</span>
+                                }
+                                else
+                                {
+                                    <span class="badge status-rejected">Rejected</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Status == "Pending")
+                                {
+                                    <form method="post" asp-action="AcceptAppointment" asp-route-id="@item.Id" style="display:inline;">
+                                        <button class="btn btn-success btn-sm">✅ Accept</button>
+                                    </form>
+                                    <form method="post" asp-action="RejectAppointment" asp-route-id="@item.Id" style="display:inline;">
+                                        <button class="btn btn-danger btn-sm">❌ Reject</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No Actions</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">No appointments found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-secondary">⬅ Back to Dashboard</a>
+    </div>
+</div>
