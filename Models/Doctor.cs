@@ -17,9 +17,10 @@ namespace DoctorAppointmentSystem.Models
 
         public string Description { get; set; } = string.Empty;
 
-        // ✅ Missing fields added
+        
         public string Specialization { get; set; } = string.Empty;
 
         public string Availability { get; set; } = string.Empty;
     }
 }
+
