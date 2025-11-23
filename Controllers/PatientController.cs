@@ -15,14 +15,14 @@ namespace DoctorAppointmentSystem.Controllers
             _mongoDBService = mongoDBService;
         }
 
-        // ✅ Show all available doctors
+       
         public async Task<IActionResult> Dashboard()
         {
             var doctors = await _mongoDBService.GetAllDoctorsAsync();
             return View(doctors);
         }
 
-        // ✅ Show booking form
+       
         [HttpGet]
         public IActionResult Book(string doctorId)
         {
@@ -30,7 +30,6 @@ namespace DoctorAppointmentSystem.Controllers
             return View();
         }
 
-        // ✅ Save booking in MongoDB
         [HttpPost]
         public async Task<IActionResult> Book(Appointment appointment)
         {
@@ -44,14 +43,13 @@ namespace DoctorAppointmentSystem.Controllers
             return View();
         }
 
-        // ✅ Show appointments for a specific patient
+        
         public async Task<IActionResult> MyAppointments(string patientId)
         {
             var list = await _mongoDBService.GetAppointmentsByPatientAsync(patientId);
             return View(list);
         }
 
-        // ✅ Cancel appointment
         public async Task<IActionResult> Cancel(string id)
         {
             await _mongoDBService.UpdateAppointmentStatusAsync(id, "Cancelled");
@@ -59,3 +57,4 @@ namespace DoctorAppointmentSystem.Controllers
         }
     }
 }
+
