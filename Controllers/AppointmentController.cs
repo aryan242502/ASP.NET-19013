@@ -17,7 +17,6 @@ namespace DoctorAppointmentSystem.Controllers
             _mongoService = mongoService;
         }
 
-        // ✅ BOOK APPOINTMENT (GET)
         [HttpGet]
         public IActionResult BookAppointment(string doctorId)
         {
@@ -35,7 +34,6 @@ namespace DoctorAppointmentSystem.Controllers
             });
         }
 
-        // ✅ BOOK APPOINTMENT (POST)
         [HttpPost]
         public async Task<IActionResult> BookAppointment(Appointment appointment)
         {
@@ -56,7 +54,6 @@ namespace DoctorAppointmentSystem.Controllers
                 return View(appointment);
             }
 
-            // ✅ Set Patient Data from Session
             appointment.PatientId = HttpContext.Session.GetString("UserId") ?? "";
             appointment.PatientName = HttpContext.Session.GetString("UserName") ?? "";
             appointment.PatientEmail = HttpContext.Session.GetString("UserEmail") ?? "";
@@ -69,7 +66,6 @@ namespace DoctorAppointmentSystem.Controllers
 
         public IActionResult Success() => View();
 
-        // ✅ ✅ SHOW ONLY LOGGED-IN USER APPOINTMENTS
         public async Task<IActionResult> MyAppointments()
         {
             var patientId = HttpContext.Session.GetString("UserId");
@@ -82,7 +78,7 @@ namespace DoctorAppointmentSystem.Controllers
             return View(appointments.OrderByDescending(a => a.AppointmentDate));
         }
 
-        // ✅ DETAILS
+        
         public async Task<IActionResult> Details(string id)
         {
             if (string.IsNullOrEmpty(id)) return BadRequest();
@@ -93,7 +89,7 @@ namespace DoctorAppointmentSystem.Controllers
             return View(appt);
         }
 
-        // ✅ EDIT GET
+        
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
@@ -105,7 +101,7 @@ namespace DoctorAppointmentSystem.Controllers
             return View(appt);
         }
 
-        // ✅ EDIT POST
+      
         [HttpPost]
         public async Task<IActionResult> Edit(string id, Appointment updated)
         {
@@ -126,7 +122,7 @@ namespace DoctorAppointmentSystem.Controllers
             return RedirectToAction("MyAppointments");
         }
 
-        // ✅ CANCEL APPOINTMENT
+        
         [HttpPost]
         public async Task<IActionResult> Cancel(string id)
         {
@@ -138,7 +134,6 @@ namespace DoctorAppointmentSystem.Controllers
             return RedirectToAction("MyAppointments");
         }
 
-        // ✅ DELETE 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -151,3 +146,4 @@ namespace DoctorAppointmentSystem.Controllers
         }
     }
 }
+
