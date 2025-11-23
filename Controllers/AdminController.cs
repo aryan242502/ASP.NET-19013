@@ -14,7 +14,6 @@ namespace DoctorAppointmentSystem.Controllers
             _mongoService = mongoService;
         }
 
-        // ====================== DASHBOARD ======================
         public async Task<IActionResult> Dashboard()
         {
             ViewBag.DoctorCount = (await _mongoService.GetAllDoctorsAsync()).Count;
@@ -23,7 +22,7 @@ namespace DoctorAppointmentSystem.Controllers
             return View();
         }
 
-        // ====================== MANAGE DOCTORS ======================
+        
         public async Task<IActionResult> ManageDoctors()
         {
             var doctors = await _mongoService.GetAllDoctorsAsync();
@@ -40,14 +39,13 @@ namespace DoctorAppointmentSystem.Controllers
             return RedirectToAction("ManageDoctors");
         }
 
-        // ====================== MANAGE USERS ======================
         public async Task<IActionResult> ManageUsers()
         {
             var users = await _mongoService.GetAllUsersAsync();
             return View(users);
         }
 
-        // ====================== MANAGE APPOINTMENTS ======================
+        
         [HttpGet]
         public async Task<IActionResult> ManageAppointments()
         {
@@ -78,3 +76,4 @@ namespace DoctorAppointmentSystem.Controllers
         }
     }
 }
+
