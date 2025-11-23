@@ -14,7 +14,6 @@ namespace DoctorAppointmentSystem.Controllers
             _mongoService = mongoService;
         }
 
-        // ✅ Dashboard showing doctor's appointments
         public async Task<IActionResult> Dashboard()
         {
             var doctorId = HttpContext.Session.GetString("DoctorId");
@@ -25,14 +24,13 @@ namespace DoctorAppointmentSystem.Controllers
             return View(appointments);
         }
 
-        // ✅ Accept Appointment
+     
         public async Task<IActionResult> Accept(string id)
         {
             await _mongoService.UpdateAppointmentStatusAsync(id, "Accepted");
             return RedirectToAction("Dashboard");
         }
 
-        // ✅ Reject Appointment
         public async Task<IActionResult> Reject(string id)
         {
             await _mongoService.UpdateAppointmentStatusAsync(id, "Rejected");
@@ -40,3 +38,4 @@ namespace DoctorAppointmentSystem.Controllers
         }
     }
 }
+
