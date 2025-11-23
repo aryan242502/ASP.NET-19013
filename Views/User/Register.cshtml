@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "User Registration";
+}
+
+<style>
+    body {
+        background: #f4f6f9;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .register-container {
+        width: 420px;
+        margin: 60px auto;
+        background: #fff;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #2c3e50;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 15px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+    .message {
+        text-align: center;
+        margin-top: 10px;
+        font-weight: 500;
+    }
+
+    .success {
+        color: green;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+
+<div class="register-container">
+    <h2>🩺 User Registration</h2>
+
+    <form asp-action="Register" method="post">
+        <input type="text" name="FullName" placeholder="Full Name" required />
+        <input type="email" name="Email" placeholder="Email Address" required />
+        <input type="password" name="Password" placeholder="Password" required />
+
+        <select name="Role" required>
+            <option value="">-- Select Role --</option>
+            <option value="Patient">Patient</option>
+            <option value="Doctor">Doctor</option>
+        </select>
+
+        <button type="submit">Register</button>
+    </form>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="message @(ViewBag.Message.ToString().Contains("✅") ? "success" : "error")">
+            @Html.Raw(ViewBag.Message)
+        </div>
+    }
+
+    <div style="text-align:center; margin-top:15px;">
+        <a href="/User/Login">Already have an account? Login</a>
+    </div>
+</div>

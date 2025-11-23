@@ -1,0 +1,163 @@
+﻿@model IEnumerable<DoctorAppointmentSystem.Models.Appointment>
+
+@{
+    ViewData["Title"] = "My Appointments";
+}
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+
+<style>
+    body {
+        background: linear-gradient(to bottom, #eef3ff, #ffffff);
+        font-family: 'Segoe UI';
+        padding-bottom: 40px;
+    }
+
+    .page-title {
+        text-align: center;
+        font-size: 32px;
+        margin-top: 30px;
+        font-weight: 800;
+        color: #1a2a5c;
+    }
+
+    .appointment-card {
+        background: #ffffff;
+        padding: 22px;
+        border-radius: 18px;
+        margin: 25px auto;
+        box-shadow: 0px 6px 18px rgba(0,0,0,0.08);
+        border-left: 6px solid #4c7cff;
+        transition: 0.25s ease-in-out;
+        max-width: 900px;
+    }
+
+        .appointment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 8px 25px rgba(0,0,0,0.12);
+        }
+
+    .label {
+        font-weight: 600;
+        margin-bottom: 3px;
+        color: #2a2a2a;
+    }
+
+    .value {
+        color: #444;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 15px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        margin-top: 8px;
+    }
+
+    .Pending {
+        background: #f4c542;
+    }
+
+    .Approved {
+        background: #34c759;
+    }
+
+    .Cancelled {
+        background: #ff3b30;
+    }
+
+    .Rejected {
+        background: #ff3b30;
+    }
+
+    .btn-action {
+        padding: 6px 15px;
+        font-size: 14px;
+        margin-left: 6px;
+        border-radius: 8px;
+    }
+
+    .btn-details {
+        background: #0dcaf0;
+        color: white;
+    }
+
+    .btn-edit {
+        background: #0d6efd;
+        color: white;
+    }
+
+    .btn-cancel {
+        background: #ffc107;
+        color: black;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+
+</style>
+
+<h2 class="page-title">📘 My Appointments</h2>
+
+@if (!Model.Any())
+{
+    <div class="text-center mt-4">
+        <h4>No appointments found.</h4>
+        <p>Book your first appointment now!</p>
+        <a href="/Home/Doctors" class="btn btn-primary">Browse Doctors</a>
+    </div>
+}
+else
+{
+    foreach (var a in Model)
+    {
+        <div class="appointment-card">
+
+            <div class="d-flex justify-content-between">
+                <div>
+                    <p class="label">Doctor:</p>
+                    <p class="value"><strong>@a.DoctorName</strong></p>
+
+                    <p class="label">Appointment Date:</p>
+                    <p class="value">@a.AppointmentDate.ToString("dd MMM yyyy")</p>
+
+                    <p class="label">Time Slot:</p>
+                    <p class="value">@a.TimeSlot</p>
+
+                    <p class="label">Description:</p>
+                    <p class="value">@a.Description</p>
+
+                    <span class="status-badge @a.Status">@a.Status</span>
+                </div>
+
+                <div class="text-end">
+                    <a href="/Appointment/Details/@a.Id" class="btn btn-action btn-details">Details</a>
+                    <a href="/Appointment/Edit/@a.Id" class="btn btn-action btn-edit">Edit</a>
+
+                    <form method="post" action="/Appointment/Cancel/@a.Id"
+                          style="display:inline;">
+                        <button class="btn btn-action btn-cancel"
+                                onclick="return confirm('Cancel appointment?')">
+                            Cancel
+                        </button>
+                    </form>
+
+                    <form method="post" action="/Appointment/Delete/@a.Id"
+                          style="display:inline;">
+                        <button class="btn btn-action btn-delete"
+                                onclick="return confirm('Delete appointment permanently?')">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    }
+}

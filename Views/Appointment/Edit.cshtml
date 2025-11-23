@@ -1,0 +1,45 @@
+﻿@model DoctorAppointmentSystem.Models.Appointment
+@{
+    ViewData["Title"] = "Edit Appointment";
+}
+
+<div class="container mt-4">
+    <h2>Edit Appointment</h2>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label>Doctor</label>
+            <input class="form-control" value="@Model.DoctorName" disabled />
+        </div>
+
+        <div class="mb-3">
+            <label>Appointment Date</label>
+            <input asp-for="AppointmentDate" type="date" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Time Slot</label>
+            <input asp-for="TimeSlot" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Patient Name</label>
+            <input asp-for="PatientName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Patient Email</label>
+            <input asp-for="PatientEmail" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <a asp-action="MyAppointments" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

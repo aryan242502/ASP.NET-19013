@@ -1,0 +1,83 @@
+﻿@model IEnumerable<DoctorAppointmentSystem.Models.Appointment>
+
+@{
+    ViewData["Title"] = "Doctor Dashboard";
+}
+
+<h2 class="text-center mb-4">👨‍⚕️ Welcome, @ViewBag.DoctorName</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-center">@TempData["Error"]</div>
+}
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info text-center">📅 No appointments yet.</div>
+}
+else
+{
+    <table class="table table-striped table-bordered shadow-sm mt-3">
+        <thead style="background-color: #007bff; color: white;">
+            <tr>
+                <th>Patient Name</th>
+                <th>Email</th>
+                <th>Appointment Date</th>
+                <th>Time Slot</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var appointment in Model)
+            {
+                <tr>
+                    <td>@appointment.PatientName</td>
+                    <td>@appointment.PatientEmail</td>
+                    <td>@appointment.AppointmentDate.ToString("dd-MMM-yyyy")</td>
+                    <td>@appointment.TimeSlot</td>
+                    <td>
+                        @if (appointment.Status == "Pending")
+                        {
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        }
+                        else if (appointment.Status == "Accepted")
+                        {
+                            <span class="badge bg-success">Accepted</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Rejected</span>
+                        }
+                    </td>
+                    <td>
+                        @if (appointment.Status == "Pending")
+                        {
+                            <div class="d-flex">
+                                <a href="@Url.Action("Accept", "Doctor", new { id = appointment.Id })"
+                                   class="btn btn-success btn-sm me-2"
+                                   onclick="return confirm('✅ Accept this appointment?');">Accept</a>
+
+                                <a href="@Url.Action("Reject", "Doctor", new { id = appointment.Id })"
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('❌ Reject this appointment?');">Reject</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <em>No action needed</em>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class="mt-4 text-center">
+    <a href="@Url.Action("Logout", "Doctor")" class="btn btn-outline-danger">🚪 Logout</a>
+</div>
