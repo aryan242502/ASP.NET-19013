@@ -16,9 +16,7 @@ namespace DoctorAppointmentSystem.Controllers
             _mongoService = mongoService;
         }
 
-        // ============================
-        // REGISTER
-        // ============================
+       
         [HttpPost]
         public async Task<IActionResult> Register(User user)
         {
@@ -28,7 +26,7 @@ namespace DoctorAppointmentSystem.Controllers
                 return View();
             }
 
-            // Check existing user
+         
             var existing = await _mongoService.GetUserByEmailAsync(user.Email);
             if (existing != null)
             {
@@ -36,7 +34,7 @@ namespace DoctorAppointmentSystem.Controllers
                 return View();
             }
 
-            // Set role and register properly (with hashing)
+            
             user.Role = "Patient";
             await _mongoService.RegisterUserAsync(user);
 
@@ -45,9 +43,6 @@ namespace DoctorAppointmentSystem.Controllers
         }
 
 
-        // ============================
-        // LOGIN
-        // ============================
         [HttpGet]
         public IActionResult Login() => View();
 
@@ -100,4 +95,5 @@ namespace DoctorAppointmentSystem.Controllers
         }
     }
 }
+
 
