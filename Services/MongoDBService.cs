@@ -1,4 +1,4 @@
-﻿using DoctorAppointmentSystem.Models;
+using DoctorAppointmentSystem.Models;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -13,61 +13,55 @@ namespace DoctorAppointmentSystem.Services
         private readonly IMongoCollection<Doctor> _doctors;
         private readonly IMongoCollection<Appointment> _appointments;
 
-        // =====================================================
-        // 🔗 MongoDB Connection
-        // =====================================================
+      
         public MongoDBService()
         {
             var client = new MongoClient("mongodb+srv://aryandevendra24_db_user:nRHwFSdAdYcp39BL@cluster0.7cjtk4r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
             var database = client.GetDatabase("DoctorAppointmentDB");
-
 
             _users = database.GetCollection<User>("Users");
             _doctors = database.GetCollection<Doctor>("Doctors");
             _appointments = database.GetCollection<Appointment>("Appointments");
         }
 
-        // =====================================================
-        // 👤 USER MANAGEMENT
-        // =====================================================
 
-        // ✅ Register new user (with password hashing)
+
         public async Task RegisterUserAsync(User user)
         {
-            user.Password = HashPassword(user.Password);
+            user.Password = HashPassword(user.Password ?? string.Empty);
+            user.FullName ??= string.Empty;
+            user.Email ??= string.Empty;
+            user.Phone ??= string.Empty;
+            user.Gender ??= string.Empty;
+            user.Role ??= "Patient";
+
             await _users.InsertOneAsync(user);
         }
 
-        // ✅ Get user by email (for login & validation)
         public async Task<User> GetUserByEmailAsync(string email) =>
             await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
 
-        // ✅ Validate user login
         public async Task<User> ValidateLoginAsync(string email, string password)
         {
-            string hashed = HashPassword(password);
+            string hashed = HashPassword(password ?? string.Empty);
             return await _users.Find(u => u.Email == email && u.Password == hashed).FirstOrDefaultAsync();
         }
 
-        // ✅ Get all users (Admin view)
         public async Task<List<User>> GetAllUsersAsync() =>
             await _users.Find(_ => true).ToListAsync();
 
-        // ✅ Update user
         public async Task UpdateUserAsync(string id, User updatedUser)
         {
             var filter = Builders<User>.Filter.Eq(u => u.Id, id);
             await _users.ReplaceOneAsync(filter, updatedUser);
         }
 
-        // ✅ Delete user
         public async Task DeleteUserAsync(string id) =>
             await _users.DeleteOneAsync(u => u.Id == id);
 
 
-        // =====================================================
-        // 👨‍⚕️ DOCTOR MANAGEMENT
-        // =====================================================
+ 
+
         public async Task<List<Doctor>> GetAllDoctorsAsync() =>
             await _doctors.Find(_ => true).ToListAsync();
 
@@ -87,13 +81,16 @@ namespace DoctorAppointmentSystem.Services
             await _doctors.DeleteOneAsync(d => d.Id == id);
 
 
-        // =====================================================
-        // 📅 APPOINTMENT MANAGEMENT
-        // =====================================================
+       
+        public async Task BookAppointmentAsync(Appointment appointment)
+        {
+            if (string.IsNullOrEmpty(appointment.PatientId))
+                throw new Exception("PatientId missing — user not logged in.");
 
-        // ✅ Book appointment
-        public async Task BookAppointmentAsync(Appointment appointment) =>
+            appointment.Status ??= "Pending";
+
             await _appointments.InsertOneAsync(appointment);
+        }
 
         public async Task<List<Appointment>> GetAppointmentsByPatientAsync(string patientId) =>
             await _appointments.Find(a => a.PatientId == patientId).ToListAsync();
@@ -104,6 +101,18 @@ namespace DoctorAppointmentSystem.Services
         public async Task<List<Appointment>> GetAllAppointmentsAsync() =>
             await _appointments.Find(_ => true).ToListAsync();
 
+        public async Task<Appointment?> GetAppointmentByIdAsync(string id) =>
+            await _appointments.Find(a => a.Id == id).FirstOrDefaultAsync();
+
+        public async Task UpdateAppointmentAsync(string id, Appointment updated)
+        {
+            var filter = Builders<Appointment>.Filter.Eq(a => a.Id, id);
+            await _appointments.ReplaceOneAsync(filter, updated);
+        }
+
+        public async Task DeleteAppointmentAsync(string id) =>
+            await _appointments.DeleteOneAsync(a => a.Id == id);
+
         public async Task UpdateAppointmentStatusAsync(string id, string newStatus)
         {
             var filter = Builders<Appointment>.Filter.Eq(a => a.Id, id);
@@ -112,11 +121,12 @@ namespace DoctorAppointmentSystem.Services
         }
 
 
-        // =====================================================
-        // 🔒 Password Hash Helper
-        // =====================================================
-        private string HashPassword(string password)
+   
+        private string HashPassword(string? password)
         {
+            if (string.IsNullOrEmpty(password))
+                return string.Empty;
+
             using var sha256 = SHA256.Create();
             byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             StringBuilder sb = new();
