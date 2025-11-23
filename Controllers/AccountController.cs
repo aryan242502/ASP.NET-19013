@@ -15,7 +15,6 @@ namespace DoctorAppointmentSystem.Controllers
             _mongoService = mongoService;
         }
 
-        // ================= REGISTER =================
         [HttpGet]
         public IActionResult Register()
         {
@@ -37,7 +36,7 @@ namespace DoctorAppointmentSystem.Controllers
             return View(user);
         }
 
-        // ================= LOGIN =================
+        
         [HttpGet]
         public IActionResult Login()
         {
@@ -47,7 +46,7 @@ namespace DoctorAppointmentSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string Email = "", string Password = "")
         {
-            // ✅ Prevents "Possible null reference assignment"
+        
             Email ??= "";
             Password ??= "";
 
@@ -67,7 +66,6 @@ namespace DoctorAppointmentSystem.Controllers
             return View();
         }
 
-        // ================= DASHBOARD =================
         public IActionResult Dashboard()
         {
             var email = HttpContext.Session.GetString("UserEmail");
@@ -80,7 +78,7 @@ namespace DoctorAppointmentSystem.Controllers
             return View();
         }
 
-        // ================= BOOK APPOINTMENT =================
+      
         [HttpGet]
         public IActionResult BookAppointment()
         {
@@ -109,7 +107,6 @@ namespace DoctorAppointmentSystem.Controllers
             return View(appointment);
         }
 
-        // ================= LOGOUT =================
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
@@ -118,3 +115,4 @@ namespace DoctorAppointmentSystem.Controllers
         }
     }
 }
+
